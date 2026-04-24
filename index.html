@@ -51,32 +51,52 @@ body {
 .accent-strip { height: 2px; background: var(--muted); position: fixed; top: 4px; left: 0; right: 0; z-index: 200; }
 .progress-bar { position: fixed; top: 0; left: 0; height: 4px; z-index: 201; background: var(--soft); width: 0%; transition: width 0.15s ease-out; }
 
-/* ═══════ NAVIGATION ═══════ */
+/* ═══════ NAVIGATION — vertical left sidebar ═══════ */
 .nav {
-  position: fixed; top: 6px; left: 0; right: 0; z-index: 150;
-  background: rgba(255,255,255,0.88);
+  position: fixed; top: 6px; left: 0; bottom: 0; z-index: 150;
+  background: rgba(255,255,255,0.92);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--pale);
-  padding: 0 28px; display: flex; align-items: center; height: 48px;
-  gap: 24px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  border-right: 1px solid var(--pale);
+  padding: 24px 20px;
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: 6px; width: 160px;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
 }
+.nav.hidden { transform: translateX(-100%); }
 .nav::-webkit-scrollbar { display: none; }
 .nav-title {
   font-family: 'Young Serif', serif;
   font-weight: 400;
   font-size: 17px; color: var(--deep);
-  white-space: nowrap; flex-shrink: 0;
+  white-space: nowrap; margin-bottom: 8px;
 }
-.nav-rule { width: 1px; height: 18px; background: var(--pale); flex-shrink: 0; }
+.nav-rule { width: 100%; height: 1px; background: var(--pale); flex-shrink: 0; margin: 4px 0; }
 .nav-link {
   font-weight: 800; font-size: 9px;
   letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--muted); text-decoration: none;
-  white-space: nowrap; flex-shrink: 0;
-  cursor: pointer; transition: color 0.2s; padding: 4px 0;
-  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  cursor: pointer; transition: color 0.2s; padding: 6px 0;
+  border-left: 2px solid transparent;
+  padding-left: 8px;
 }
-.nav-link:hover, .nav-link.active { color: var(--deep); border-bottom-color: var(--deep); }
+.nav-link:hover, .nav-link.active { color: var(--deep); border-left-color: var(--deep); }
+
+/* ═══════ NAV TOGGLE BUTTON ═══════ */
+.nav-toggle {
+  position: fixed; top: 14px; left: 12px; z-index: 160;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--pale); border-radius: 8px;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--deep);
+  transition: opacity 0.3s, left 0.3s;
+  padding: 0;
+}
+.nav-toggle.shifted { left: 168px; }
 
 /* ═══════ LAYOUT ═══════ */
 .page { max-width: 780px; margin: 0 auto; padding: 0 36px; }
@@ -574,8 +594,9 @@ body {
   .prose-title { font-size: clamp(32px, 6vw, 44px); }
   .block-tinted { margin-left: -22px; margin-right: -22px; padding: 32px 22px; }
   .modes { grid-template-columns: 1fr; }
-  .nav { padding: 0 16px; gap: 16px; height: 44px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; }
-  .nav::-webkit-scrollbar { display: none; }
+  .nav { width: 140px; padding: 20px 16px; }
+  .nav-toggle { top: 10px; left: 8px; width: 36px; height: 36px; }
+  .nav-toggle.shifted { left: 148px; }
   .thruline-title { font-size: 17px; }
   .letter { padding: 72px 0 56px; }
 }
@@ -587,7 +608,11 @@ body {
 <div class="accent-strip"></div>
 <div class="progress-bar" id="progressBar"></div>
 
-<nav class="nav">
+<button class="nav-toggle shifted" id="navToggle" onclick="toggleNav()" aria-label="Toggle navigation">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+</button>
+
+<nav class="nav" id="sideNav">
   <div class="nav-title">The Cure</div>
   <div class="nav-rule"></div>
   <a class="nav-link" onclick="goTo('mechanism')">MECHANISM</a>
@@ -601,6 +626,7 @@ body {
   <a class="nav-link" onclick="goTo('truths')">TRUTHS</a>
   <a class="nav-link" onclick="goTo('yousaidit')">YOU SAID IT</a>
   <a class="nav-link" onclick="goTo('emergency')">EMERGENCY</a>
+  <div class="nav-rule"></div>
   <button class="nav-audio-btn" id="audioToggle" onclick="toggleAmbient()" aria-label="Toggle ambient sound">
     <svg id="audioIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14" class="audio-wave-1"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.08" class="audio-wave-2"></path></svg>
   </button>
@@ -2148,9 +2174,15 @@ body {
 
   <div class="poster poster-dark" style="min-height: 50vh;">
     <div style="max-width: 560px;">
-      <p class="poster-text-articulate" style="font-size: clamp(22px, 4.5vw, 34px); color: var(--ice); line-height: 1.5;">"For we are God's handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."</p>
+      <p class="poster-text-articulate" style="font-size: clamp(22px, 4.5vw, 34px); color: var(--muted); line-height: 1.5;">"For we are God's handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."</p>
       <p class="poster-source-whisper" style="color: var(--muted); margin-top: 24px;">Ephesians 2:10</p>
     </div>
+  </div>
+
+  <div style="text-align: center; padding: 32px 0 8px;">
+    <button onclick="scrollToTop()" style="background: none; border: none; cursor: pointer; color: var(--muted); padding: 16px; transition: color 0.2s;" aria-label="Back to top">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg>
+    </button>
   </div>
 
   <div class="footer">
@@ -2265,6 +2297,25 @@ function createRipple(e) {
   setTimeout(() => ripple.remove(), 2500);
 }
 
+
+
+/* ═══════ NAV TOGGLE ═══════ */
+function toggleNav() {
+  const nav = document.getElementById('sideNav');
+  const btn = document.getElementById('navToggle');
+  nav.classList.toggle('hidden');
+  btn.classList.toggle('shifted');
+  // Swap hamburger / X icon
+  if (nav.classList.contains('hidden')) {
+    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
+  } else {
+    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
+  }
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 /* ═══════ AMBIENT AUDIO ═══════ */
 function toggleAmbient() {
