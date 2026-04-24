@@ -1,0 +1,2294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Cure">
+<meta name="theme-color" content="#006D77">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>The Cure</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='18' y='10' width='28' height='40' rx='2' fill='none' stroke='%233cbbfa' stroke-width='2.5'/%3E%3Cpath d='M22 50 Q32 56 42 50' fill='none' stroke='%233cbbfa' stroke-width='2' stroke-linecap='round'/%3E%3Crect x='21' y='26' width='22' height='21' rx='1' fill='%233cbbfa' opacity='0.5'/%3E%3Cpath d='M21 32 Q27 29 32 32 Q37 35 43 32' fill='none' stroke='%233cbbfa' stroke-width='1.5' opacity='0.7'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,800&family=Young+Serif&family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --deep: #006D77;
+  --teal: #1a8fa0;
+  --mid: #47b5c2;
+  --muted: #83c5be;
+  --soft: #a8dadc;
+  --pale: #ceeaf0;
+  --ice: #e8f7f9;
+  --glass: #f2fbfc;
+  --cream: #f7f3ee;
+  --white: #ffffff;
+  --ink: #003d45;
+  --text: #1C1C1C;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════ TOP BARS ═══════ */
+.top-bar { height: 4px; background: var(--deep); position: fixed; top: 0; left: 0; right: 0; z-index: 200; }
+.accent-strip { height: 2px; background: var(--muted); position: fixed; top: 4px; left: 0; right: 0; z-index: 200; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 4px; z-index: 201; background: var(--soft); width: 0%; transition: width 0.15s ease-out; }
+
+/* ═══════ NAVIGATION ═══════ */
+.nav {
+  position: fixed; top: 6px; left: 0; right: 0; z-index: 150;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--pale);
+  padding: 0 28px; display: flex; align-items: center; height: 48px;
+  gap: 24px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav-title {
+  font-family: 'Young Serif', serif;
+  font-weight: 400;
+  font-size: 17px; color: var(--deep);
+  white-space: nowrap; flex-shrink: 0;
+}
+.nav-rule { width: 1px; height: 18px; background: var(--pale); flex-shrink: 0; }
+.nav-link {
+  font-weight: 800; font-size: 9px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+  white-space: nowrap; flex-shrink: 0;
+  cursor: pointer; transition: color 0.2s; padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+.nav-link:hover, .nav-link.active { color: var(--deep); border-bottom-color: var(--deep); }
+
+/* ═══════ LAYOUT ═══════ */
+.page { max-width: 780px; margin: 0 auto; padding: 0 36px; }
+
+/* ═══════ HERO — full viewport poster ═══════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  position: relative; overflow: hidden;
+  background: linear-gradient(175deg, #83c5be 0%, #a8dadc 25%, #ceeaf0 50%, #e8f7f9 70%, #f2fbfc 85%, #ffffff 100%);
+  padding: 60px 36px;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse 120px 80px at 20% 30%, rgba(255,255,255,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 180px 100px at 70% 50%, rgba(255,255,255,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 100px 140px at 40% 80%, rgba(255,255,255,0.05) 0%, transparent 70%);
+  animation: causticDrift 12s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes causticDrift {
+  0% { opacity: 0.6; transform: translateX(0) translateY(0); }
+  100% { opacity: 1; transform: translateX(-15px) translateY(8px); }
+}
+.hero-waves {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+  pointer-events: none; overflow: hidden;
+}
+.hero-waves svg { position: absolute; bottom: 0; width: 200%; left: -50%; }
+.wave-1 { animation: waveDrift1 8s ease-in-out infinite; }
+.wave-2 { animation: waveDrift2 10s ease-in-out infinite; }
+@keyframes waveDrift1 { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3%); } }
+@keyframes waveDrift2 { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-2%); } }
+
+.hero-content { position: relative; z-index: 1; max-width: 600px; }
+.hero-icon { margin: 0 auto 60px; opacity: 0.5; }
+.hero h1 {
+  font-family: 'Young Serif', serif;
+  font-weight: 400; font-size: clamp(72px, 14vw, 120px);
+  color: var(--deep);
+  line-height: 0.88; margin-bottom: 48px;
+  letter-spacing: -0.04em;
+}
+.hero-sub {
+  font-size: 15px; color: var(--deep); opacity: 0.6;
+  max-width: 380px; margin: 0 auto;
+  line-height: 1.85;
+}
+
+/* ═══════ POSTER — full-viewport single-idea moments ═══════ */
+.poster {
+  min-height: 70vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 80px 36px 100px;
+}
+.poster-full {
+  min-height: 90vh;
+}
+.poster-dark {
+  background: #ffffff;
+  position: relative; overflow: hidden;
+}
+.poster-dark::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse 200px 120px at 30% 45%, rgba(255,255,255,0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 160px 200px at 70% 55%, rgba(255,255,255,0.02) 0%, transparent 70%);
+  pointer-events: none;
+}
+.poster-ice {
+  background: var(--ice);
+}
+.poster-glass {
+  background: var(--glass);
+}
+.poster-text {
+  font-family: 'Lora', serif;
+  font-weight: 700; font-style: italic;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  max-width: 680px;
+  position: relative;
+}
+.poster-text-lg {
+  font-size: clamp(36px, 7vw, 64px);
+  color: var(--deep);
+}
+.poster-text-xl {
+  font-size: clamp(44px, 9vw, 80px);
+  color: var(--deep);
+}
+.poster-text-teal {
+  font-size: clamp(36px, 7vw, 64px);
+  color: var(--teal);
+}
+.poster-source {
+  font-family: 'Lora', serif;
+  font-weight: 700; font-style: normal;
+  font-size: 13px; letter-spacing: 0.04em;
+  text-transform: none;
+  margin-top: 10px; opacity: 0.6;
+  color: var(--muted);
+}
+.poster-dark .poster-source { color: var(--muted); }
+
+/* Evidence-specific: quiet but readable source labels */
+.poster-source-whisper {
+  font-family: 'Lora', serif;
+  font-weight: 700; font-style: normal;
+  font-size: 13px; letter-spacing: 0.04em;
+  text-transform: none;
+  margin-top: 10px; opacity: 0.6;
+  color: var(--muted);
+}
+.poster-dark .poster-source-whisper { color: var(--muted); opacity: 0.6; }
+
+/* Evidence: DM Sans articulation treatment for longer quotes */
+.poster-text-articulate {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700; font-style: normal;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  max-width: 620px;
+  position: relative;
+}
+.poster-text-articulate-dark {
+  color: var(--deep);
+}
+.poster-text-articulate-teal {
+  color: var(--deep);
+}
+
+/* Light poster variants for Evidence alternation */
+.poster-white {
+  background: var(--white);
+}
+.poster-pale {
+  background: var(--pale);
+}
+
+/* Evidence section divider — subtle category label */
+.evidence-category {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700; font-size: 12px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  opacity: 0.5; margin-bottom: 12px;
+}
+
+
+/* ═══════ WATER SVG DECORATIONS ═══════ */
+
+
+/* Animated subtle shimmer for water stars */
+
+}
+
+
+/* Wave separator between sections */
+
+
+/* Poster with water decoration overlay */
+
+
+.prose {
+  padding-top: 80px;
+  padding-bottom: 60px;
+}
+.prose-label {
+  font-weight: 800; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 20px;
+}
+.prose-title {
+  font-family: 'Young Serif', serif;
+  font-weight: 400; font-size: clamp(38px, 6vw, 56px);
+  color: var(--deep);
+  line-height: 1.0; margin-bottom: 40px;
+  letter-spacing: -0.025em;
+}
+.prose-intro {
+  font-size: 16px; line-height: 1.9;
+  margin-bottom: 56px;
+}
+
+/* ═══════ CONTENT BLOCKS — no borders, just space ═══════ */
+.block {
+  margin-bottom: 48px;
+}
+.block-title {
+  font-weight: 800; font-size: 10px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 16px;
+}
+.block p { font-size: 15px; line-height: 1.9; }
+.block p + p { margin-top: 16px; }
+
+/* subtle background tint for alternating blocks */
+.block-tinted {
+  background: var(--glass);
+  margin-left: -36px; margin-right: -36px;
+  padding: 40px 36px;
+  margin-bottom: 48px;
+}
+
+/* ═══════ STEPS — arch numbers ═══════ */
+.step { display: flex; gap: 22px; margin-bottom: 40px; align-items: flex-start; }
+.step-num {
+  flex-shrink: 0; width: 28px; height: 36px;
+  background: var(--deep);
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 12px; color: var(--white);
+  margin-top: 2px; padding-top: 2px;
+}
+.step-content h4 {
+  font-weight: 800; font-size: 13px;
+  letter-spacing: 0.06em; color: var(--deep);
+  margin-bottom: 10px;
+}
+.step-content p { font-size: 15px; line-height: 1.9; }
+
+/* ═══════ CHECKLIST ═══════ */
+.ritual-item {
+  display: flex; gap: 18px; align-items: flex-start;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--pale);
+}
+.ritual-item:last-child { border-bottom: none; }
+.ritual-check {
+  flex-shrink: 0; width: 24px; height: 24px;
+  border: 2.5px solid var(--teal); border-radius: 7px;
+  cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: background 0.15s, transform 0.1s;
+  margin-top: 3px; background: white;
+}
+.ritual-check:active { transform: scale(0.92); }
+.ritual-check.checked { background: var(--teal); }
+.ritual-check svg { opacity: 0; transition: opacity 0.15s; }
+.ritual-check.checked svg { opacity: 1; }
+.ritual-text { font-size: 15px; line-height: 1.8; }
+.ritual-text strong { font-weight: 800; color: var(--deep); }
+
+/* ═══════ ACCORDION ═══════ */
+.accordion { margin-bottom: 8px; }
+.accordion-trigger {
+  width: 100%; background: transparent;
+  border: none; border-bottom: 1px solid var(--pale);
+  padding: 18px 0;
+  cursor: pointer; display: flex;
+  align-items: center; justify-content: space-between;
+  transition: all 0.2s; text-align: left;
+}
+.accordion-trigger:hover { border-bottom-color: var(--muted); }
+.accordion-trigger.open { border-bottom-color: transparent; }
+.accordion-trigger span {
+  font-weight: 800; font-size: 11px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--deep); padding-right: 16px;
+}
+.accordion-arrow { width: 14px; height: 14px; transition: transform 0.25s; flex-shrink: 0; }
+.accordion-trigger.open .accordion-arrow { transform: rotate(180deg); }
+.accordion-body {
+  max-height: 0; overflow: hidden;
+  padding: 0;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+}
+.accordion-body.open { max-height: 600px; padding: 0 0 32px; }
+.accordion-body p { font-size: 15px; line-height: 1.9; margin-top: 16px; }
+.accordion-body p strong { font-weight: 700; color: var(--deep); }
+
+/* ═══════ WRITING MODES ═══════ */
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+.mode-card {
+  background: transparent;
+  border-bottom: 2px solid var(--pale);
+  padding: 20px 0;
+  cursor: pointer; transition: all 0.2s;
+  position: relative;
+}
+.mode-card:hover { border-bottom-color: var(--muted); }
+.mode-card.active { border-bottom-color: var(--deep); }
+.mode-card h4 {
+  font-weight: 800; font-size: 10px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--deep); margin-bottom: 8px;
+}
+.mode-card p { font-size: 13px; line-height: 1.65; color: var(--muted); }
+.mode-detail {
+  display: none; margin-top: 24px;
+  padding: 28px 0;
+  border-top: 1px solid var(--pale);
+}
+.mode-detail.visible { display: block; }
+.mode-detail h4 {
+  font-weight: 800; font-size: 10px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 14px;
+}
+.mode-detail p { font-size: 15px; line-height: 1.85; }
+
+/* ═══════ BREATHING — arch ═══════ */
+.breathe-container {
+  display: flex; flex-direction: column;
+  align-items: center; padding: 60px 0; gap: 24px;
+}
+.breathe-arch {
+  width: 120px; height: 120px; position: relative;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.breathe-arch-shape {
+  width: 80px; height: 80px;
+  background: transparent;
+  border: 2px solid var(--teal);
+  border-radius: 50%;
+  transition: all 0.3s;
+  position: absolute;
+  top: 20px; left: 20px;
+}
+.breathe-arch-shape::before {
+  content: '';
+  position: absolute;
+  top: -14px; left: -14px; right: -14px; bottom: -14px;
+  border: 1.5px solid var(--muted);
+  border-radius: 50%;
+}
+.breathe-arch-shape::after {
+  content: '';
+  position: absolute;
+  top: -28px; left: -28px; right: -28px; bottom: -28px;
+  border: 1px solid var(--soft);
+  border-radius: 50%;
+}
+.breathe-arch.breathing .breathe-arch-shape {
+  animation: breatheRipple 8s ease-in-out infinite;
+}
+.breathe-arch.breathing .breathe-arch-shape::before {
+  animation: breatheRipple 8s ease-in-out 0.3s infinite;
+}
+.breathe-arch.breathing .breathe-arch-shape::after {
+  animation: breatheRipple 8s ease-in-out 0.6s infinite;
+}
+@keyframes breatheRipple {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.15); }
+  50% { transform: scale(1.15); }
+  75% { transform: scale(1); }
+}
+.breathe-text {
+  position: relative; z-index: 1;
+  font-weight: 800; font-size: 9px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--teal); text-align: center;
+}
+.breathe-label { font-size: 13px; color: var(--muted); text-align: center; min-height: 20px; }
+
+/* ═══════ THRULINES ═══════ */
+.thruline {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--pale);
+}
+.thruline:last-child { border-bottom: none; }
+.thruline-num {
+  font-weight: 800; font-size: 9px;
+  letter-spacing: 0.1em; color: var(--muted);
+  display: block; margin-bottom: 4px;
+}
+.thruline-title {
+  font-family: 'Lora', serif;
+  font-weight: 700; font-style: italic;
+  font-size: 20px; color: var(--deep);
+}
+
+/* ═══════ TIMER ═══════ */
+.timer-container {
+  display: flex; align-items: center; justify-content: center;
+  gap: 20px; padding: 28px 0;
+}
+.timer-display {
+  font-weight: 800; font-size: 34px;
+  letter-spacing: 0.04em; color: var(--deep);
+  font-variant-numeric: tabular-nums;
+  min-width: 90px; text-align: center;
+}
+.timer-btn {
+  width: 42px; height: 42px;
+  border-radius: 11px; border: 2.5px solid var(--teal);
+  background: white; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.timer-btn:hover { background: var(--glass); }
+.timer-btn.running { background: var(--teal); }
+.timer-btn.running svg path { stroke: var(--white); }
+.timer-label {
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); text-align: center; margin-top: 8px;
+}
+.timer-water-wrap {
+  width: 100%; max-width: 300px; height: 4px; background: var(--ice);
+  border-radius: 2px; margin: 14px auto 0; overflow: hidden;
+}
+.timer-water-fill {
+  height: 100%; background: linear-gradient(90deg, var(--muted), var(--soft));
+  border-radius: 2px; width: 0%; transition: width 1s linear;
+}
+
+/* ═══════ RIPPLE ═══════ */
+.ripple-zone {
+  position: relative; overflow: hidden; cursor: pointer;
+  min-height: 30vh; display: flex; justify-content: center; align-items: center;
+}
+.ripple-zone .ripple-prompt {
+  font-weight: 800; font-size: 9px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--pale); transition: opacity 0.4s;
+}
+.ripple-circle {
+  position: absolute; border-radius: 50%;
+  border: 1px solid var(--soft);
+  animation: rippleExpand 2.5s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes rippleExpand {
+  0% { width: 0; height: 0; opacity: 0.6; }
+  100% { width: 400px; height: 400px; opacity: 0; }
+}
+
+/* ═══════ LETTER ═══════ */
+.letter {
+  padding: 100px 0 80px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.letter p {
+  font-family: 'Lora', serif;
+  font-weight: 700; font-style: normal;
+  font-size: 17px; line-height: 1.75;
+  color: var(--deep);
+  text-align: center;
+}
+.letter p + p { margin-top: 24px; }
+
+/* ═══════ FOOTER ═══════ */
+.footer {
+  text-align: center; padding: 48px 0 28px;
+  border-top: 1px solid var(--pale); margin-top: 40px;
+}
+.footer p { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+
+/* ═══════ DIVIDER — thin wave ═══════ */
+.wave-div {
+  height: 48px; position: relative; overflow: hidden; margin: 0;
+}
+.wave-div svg {
+  position: absolute; bottom: 50%; width: 200%; left: -50%;
+  animation: waveDivDrift 7s ease-in-out infinite;
+}
+@keyframes waveDivDrift { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(2%); } }
+
+
+/* ═══════ AUDIO TOGGLE ═══════ */
+.nav-audio-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--muted); padding: 4px;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-left: auto;
+  transition: color 0.2s;
+}
+.nav-audio-btn:hover, .nav-audio-btn.playing { color: var(--deep); }
+.nav-audio-btn .audio-wave-1, .nav-audio-btn .audio-wave-2 { opacity: 0.3; transition: opacity 0.3s; }
+.nav-audio-btn.playing .audio-wave-1, .nav-audio-btn.playing .audio-wave-2 { opacity: 1; }
+
+/* ═══════ MOBILE ═══════ */
+@media (max-width: 640px) {
+  .page { padding: 0 22px; }
+  .hero { padding: 60px 22px; }
+  .hero h1 { font-size: clamp(56px, 14vw, 90px); }
+  .poster { padding: 60px 22px; min-height: 60vh; }
+  .poster-full { min-height: 75vh; }
+  .poster-text-lg { font-size: clamp(28px, 7vw, 48px); }
+  .poster-text-xl { font-size: clamp(32px, 9vw, 60px); }
+  .poster-text-teal { font-size: clamp(28px, 7vw, 48px); }
+  .prose { padding: 72px 0 56px; }
+  .prose-title { font-size: clamp(32px, 6vw, 44px); }
+  .block-tinted { margin-left: -22px; margin-right: -22px; padding: 32px 22px; }
+  .modes { grid-template-columns: 1fr; }
+  .nav { padding: 0 16px; gap: 16px; height: 44px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .thruline-title { font-size: 17px; }
+  .letter { padding: 72px 0 56px; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+<div class="accent-strip"></div>
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="nav">
+  <div class="nav-title">The Cure</div>
+  <div class="nav-rule"></div>
+  <a class="nav-link" onclick="goTo('mechanism')">MECHANISM</a>
+  <a class="nav-link" onclick="goTo('approach')">APPROACH</a>
+  <a class="nav-link" onclick="goTo('ritual')">RITUAL</a>
+  <a class="nav-link" onclick="goTo('modes')">MODES</a>
+  <a class="nav-link" onclick="goTo('rules')">RULES</a>
+  <a class="nav-link" onclick="goTo('auditor')">AUDITOR</a>
+  <a class="nav-link" onclick="goTo('evidence')">EVIDENCE</a>
+  <a class="nav-link" onclick="goTo('therecord')">THE RECORD</a>
+  <a class="nav-link" onclick="goTo('truths')">TRUTHS</a>
+  <a class="nav-link" onclick="goTo('yousaidit')">YOU SAID IT</a>
+  <a class="nav-link" onclick="goTo('emergency')">EMERGENCY</a>
+  <button class="nav-audio-btn" id="audioToggle" onclick="toggleAmbient()" aria-label="Toggle ambient sound">
+    <svg id="audioIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14" class="audio-wave-1"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.08" class="audio-wave-2"></path></svg>
+  </button>
+</nav>
+
+<audio id="ambientAudio" loop preload="none">
+  <source src="ambient.mp3" type="audio/mpeg">
+</audio>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<div class="hero">
+  <div class="hero-waves">
+    <svg viewBox="0 0 1600 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" class="wave-1">
+      <path d="M0 60 Q200 30 400 60 Q600 90 800 60 Q1000 30 1200 60 Q1400 90 1600 60 V120 H0Z" fill="rgba(0,109,119,0.06)"/>
+    </svg>
+    <svg viewBox="0 0 1600 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" class="wave-2">
+      <path d="M0 80 Q200 55 400 80 Q600 105 800 80 Q1000 55 1200 80 Q1400 105 1600 80 V120 H0Z" fill="rgba(0,109,119,0.04)"/>
+    </svg>
+  </div>
+  
+
+<div class="hero-content">
+    <div class="hero-icon">
+      <svg width="48" height="28" viewBox="0 0 48 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 14 Q12 6 24 14 Q36 22 44 14" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M4 20 Q12 12 24 20 Q36 28 44 20" stroke="var(--muted)" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.4"/>
+      </svg>
+    </div>
+    <h1>The Cure</h1>
+    <p class="hero-sub">A guide for the writer who knows what you want to write and can't start. Not because you don't know how. Because the knowing feels insufficient as a reason to begin.</p>
+  </div>
+</div>
+
+<main class="page">
+
+  <!-- ═══════════════════ THE MECHANISM ═══════════════════ -->
+  <div class="prose" id="mechanism">
+    <p class="prose-label">What's Actually Happening</p>
+    <h2 class="prose-title">The Mechanism</h2>
+
+    <p class="prose-intro">This is not a craft problem. It is not writer's block in any useful sense. The mechanism is specific, and you have already named it: you have collapsed the distance between the writing and the writer's identity. A bad draft doesn't mean "this needs revision." It means you are not who you think you are.</p>
+
+    <div class="block">
+      <p class="block-title">The Gap</p>
+      <p>The scene stays vivid in your head indefinitely because the internal version never has to be tested. The moment you start typing, it enters the zone where it can fail. And failure doesn't mean a bad scene. It means the discovery that the gap between what you can imagine and what you can execute is permanent.</p>
+      <p>That's the fear. Not a bad script. A permanent demotion from the version in your head.</p>
+    </div>
+
+    <div class="block-tinted">
+      <p class="block-title">The Adjacent Task</p>
+      <p>The research, the notes, the reformatting, the app-building. You built an entire screenwriting tool to avoid using it. That's not procrastination. That's your protector part being incredibly resourceful. She maintains the fiction that you're on your way. The internal version stays intact, the identity stays intact, and nothing has been disproved yet.</p>
+    </div>
+
+    <div class="block">
+      <p class="block-title">The Success Trap</p>
+      <p>The writing was better than expected, and that made it worse. Now the bar is set by an accident. Even success becomes a threat because the accidental good thing raises the standard for the next intentional attempt. The brief high, then the auditor arrives to evaluate. There is no winning inside that system.</p>
+    </div>
+
+    <div class="block-tinted">
+      <p class="block-title">The Sneak Attack</p>
+      <p>The voice doesn't always stop you from opening the document. Sometimes it waits. You get going, twenty minutes in, and then: "Is that part good enough?" "Is that cheesy?" You engage with it. Twenty minutes pass before you notice you stopped writing and started arguing. That's the version that's hardest to catch, because you were already in.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══════════════════ WATER_ART_1 -->
+<div style="padding:48px 0;text-align:center;">
+<svg width="280" height="80" viewBox="0 0 280 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
+  <path d="M10 50 Q30 20 50 40 Q65 55 80 35 Q95 15 115 40 Q130 58 150 30 Q165 10 185 38 Q200 55 215 35 Q230 18 250 42 Q265 55 270 45" stroke="#83c5be" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M25 58 Q45 35 65 50 Q80 60 95 42 Q110 25 130 48 Q145 62 165 38 Q180 20 200 45 Q215 58 235 40 Q250 28 260 50" stroke="#a8dadc" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <path d="M5 65 Q25 48 45 58 Q60 65 75 52 Q90 40 110 55 Q125 65 145 48 Q160 35 180 52 Q195 62 215 48 Q235 38 255 55 Q270 62 275 55" stroke="#ceeaf0" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+</svg>
+</div>
+<!-- POSTER: WANTING TO MATTER ═══════════════════ -->
+<div class="poster poster-full">
+  <div style="max-width: 640px;">
+    <p class="poster-text poster-text-teal">It's not that you need the outcome to be perfect. It's that you want to matter.</p>
+  </div>
+</div>
+
+<main class="page">
+
+  <!-- ═══════════════════ THE NEW APPROACH ═══════════════════ -->
+  <div class="prose" id="approach">
+    <p class="prose-label">From Your Therapist, April 2026</p>
+    <h2 class="prose-title">The New Approach</h2>
+
+    <p class="prose-intro">You've been fighting the voice. Every strategy so far has been about outmaneuvering her, circumventing her, tricking her into silence. Your therapist pointed out something you'd never tried: what if you just heard her out?</p>
+
+    <div class="block-tinted">
+      <p class="block-title">Don't Fight. Listen.</p>
+      <p>Resistance gives the voice power. The more you push against it, the louder it gets. Instead: pause. Let her talk. What is she actually saying? When you write it down — when you journal what the voice is telling you — it doesn't hold up. It falls apart on the page. The voice is confident in the dark. It is not confident in writing.</p>
+    </div>
+
+    <div class="block">
+      <p class="block-title">Feel It in Your Body</p>
+      <p>The voice has a location. Chest, throat, jaw, hands. Before you try to think your way through it, find where she lives in your body right now. Breathe into that spot. Hold it there. Exhale slowly. You're not solving anything — you're just making room. The somatic approach works because the voice operates below thought. You can't outthink something that isn't thinking.</p>
+    </div>
+
+    <div class="breathe-container">
+      <div class="breathe-arch" id="breatheArch" onclick="toggleBreathe()">
+        <div class="breathe-arch-shape"></div>
+        <span class="breathe-text" id="breatheText">START</span>
+      </div>
+      <p class="breathe-label" id="breatheLabel">Tap to begin a breathing cycle</p>
+    </div>
+
+    <div class="block-tinted">
+      <p class="block-title">The ADHD Factor</p>
+      <p>Taking a break from writing doesn't mean a 10-minute pause. It means you're oiling teak furniture at 2 AM and the whole night is gone. The task-switching cost is not normal-sized for you. Which means the "just take a break and come back to it" advice is wrong. The session rules below are built around this: bounded time, forward only, no breaks that let the night escape.</p>
+    </div>
+
+    <div class="block">
+      <p class="block-title">Journal the Voice</p>
+      <p>When the auditor shows up mid-session, don't argue with her. Open a separate note (not the draft) and write down exactly what she's saying. Word for word. "This scene is cheesy." "You're not ready." "This isn't what Lilly expects." When you see it written out, it loses its authority. The voice is a feeling pretending to be a fact. Facts survive paper. Feelings pretending to be facts do not.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- poster -->
+<div class="poster">
+  <p class="poster-text poster-text-teal" style="font-size: clamp(26px, 5vw, 42px);">"I've literally never tried hearing the voice out before."</p>
+</div>
+
+<main class="page">
+
+  <!-- ═══════════════════ THE RITUAL ═══════════════════ -->
+  <div class="prose" id="ritual">
+    <p class="prose-label">Five Minutes Max</p>
+    <h2 class="prose-title">The Pre-Writing Ritual</h2>
+
+    <p class="prose-intro">The ritual isn't preparation. It's permission delivered through muscle memory. It is specifically designed to be too short to become an adjacent task.</p>
+
+    <div class="block">
+      <p class="block-title">The Checklist</p>
+
+      <div class="ritual-item">
+        <div class="ritual-check" onclick="toggleCheck(this)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="ritual-text"><strong>Say it out loud:</strong> "I am a writer who writes." Present tense. Declarative. No qualification. You're telling the protector who you already are.</div>
+      </div>
+
+      <div class="ritual-item">
+        <div class="ritual-check" onclick="toggleCheck(this)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="ritual-text"><strong>Play the song.</strong> Same song every time. It's Pavlovian — you're training your nervous system to associate it with the unguarded room.</div>
+      </div>
+
+      <div class="ritual-item">
+        <div class="ritual-check" onclick="toggleCheck(this)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="ritual-text"><strong>Get the glass of water. Sit in the spot.</strong> No reviewing notes, no reading the previous scene. The ritual has to be too short to think in.</div>
+      </div>
+
+      <div class="ritual-item">
+        <div class="ritual-check" onclick="toggleCheck(this)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="ritual-text"><strong>Open a new document.</strong> Not where you stopped. New. Blank. Opening previous work puts you in comparison mode. New document removes that. You're not continuing — you're discovering.</div>
+      </div>
+
+      <div class="ritual-item">
+        <div class="ritual-check" onclick="toggleCheck(this)">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="ritual-text"><strong>Write one bridge sentence.</strong> Not the first line of the scene. Just a door — "she was already tired of explaining it" or "the room felt different in the afternoon." It doesn't have to be good. It's a door, not a sentence.</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- poster: who is in the room -->
+<main class="page">
+
+  <!-- timer -->
+  <div style="padding: 64px 0; text-align: center;">
+    <p class="prose-label" style="text-align: center;">Session Timer</p>
+    <div class="timer-container">
+      <button class="timer-btn" id="timerBtn" onclick="toggleTimer()">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path id="timerIcon" d="M6 4L14 9L6 14Z" stroke="#1a8fa0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="timer-display" id="timerDisplay">0:00</div>
+      <button class="timer-btn" onclick="resetTimer()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 2V6H6" stroke="#1a8fa0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 10A5 5 0 1 0 5.5 4.5L2 6" stroke="#1a8fa0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <p class="timer-label">Forward only. No going back.</p>
+    <div class="timer-water-wrap">
+      <div class="timer-water-fill" id="timerWaterFill"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ WRITING MODES ═══════════════════ -->
+  <div class="prose" id="modes" style="padding-top: 40px;">
+    <p class="prose-label">Match Your Energy</p>
+    <h2 class="prose-title">Writing Modes</h2>
+
+    <p class="prose-intro">Check in with what your brain can actually do right now — not what the calendar says. Each mode is a real session. Each one counts.</p>
+
+    <div class="modes">
+      <div class="mode-card" onclick="selectMode('flow')">
+        <h4>Flow Mode</h4>
+        <p>High activation, ideas firing. New scenes, dialogue, discovery writing.</p>
+      </div>
+      <div class="mode-card" onclick="selectMode('note')">
+        <h4>Note-to-Scene</h4>
+        <p>Medium energy. Take an existing note and expand it into a scene.</p>
+      </div>
+      <div class="mode-card" onclick="selectMode('cut')">
+        <h4>Cut Mode</h4>
+        <p>Surgical, detached. Edit existing work. Remove, tighten, restructure.</p>
+      </div>
+      <div class="mode-card" onclick="selectMode('friction')">
+        <h4>Friction Mode</h4>
+        <p>Auditor is loud. Breathe. Journal the voice. Bridge sentence only.</p>
+      </div>
+    </div>
+
+    <div class="mode-detail" id="mode-flow-detail">
+      <h4>Flow Mode Rules</h4>
+      <p>New document. Bridge sentence. Forward only. Don't read back. Don't stop until the tank starts emptying — but stop before it's empty. Leave a door line at the bottom for next time. This is the 10-hour, forget-to-eat mode. Don't fight it, don't schedule it, just protect it when it arrives.</p>
+    </div>
+    <div class="mode-detail" id="mode-note-detail">
+      <h4>Note-to-Scene Rules</h4>
+      <p>Pick one note. Just one. Open a new document, paste the note at the top, then write the scene below it. The note is the seed — not the outline, not the constraint. Let the scene go wherever it goes. If it departs from the note, the scene is right and the note was the seed's job, now finished.</p>
+    </div>
+    <div class="mode-detail" id="mode-cut-detail">
+      <h4>Cut Mode Rules</h4>
+      <p>Only available when you have three or more scenes. You're not generating — you're shaping. The auditor is useful here. Let her look. This is where she belongs: after the draft exists, not before. Give her the scalpel but not the pen.</p>
+    </div>
+    <div class="mode-detail" id="mode-friction-detail">
+      <h4>Friction Mode Rules</h4>
+      <p>The auditor is loud and the document feels impossible. Don't fight. Use the breathing exercise above. Open a separate note and journal exactly what the voice is saying. Read it back. It won't hold up. Then: one bridge sentence in a new document. That's the whole session. If more comes, let it. If it doesn't, the bridge sentence counts. Twenty minutes counts. You showed up.</p>
+    </div>
+  </div>
+
+  <!-- wave separator -->
+  <div style="padding: 24px 0; text-align: center;">
+    <svg width="320" height="40" viewBox="0 0 320 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
+      <path d="M0 20 Q40 8 80 20 Q120 32 160 20 Q200 8 240 20 Q280 32 320 20" stroke="#ceeaf0" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- ═══════════════════ THE RULES ═══════════════════ -->
+  <div class="prose" id="rules">
+    <p class="prose-label">For the Session</p>
+    <h2 class="prose-title">The Rules</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Forward Only</h4>
+        <p>When a sentence feels wrong, type XXX and keep going. The XXX marks are a promise: I will come back for you. They keep the generative brain in charge. You are not allowed to go back during a session.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>One Thing Per Sitting</h4>
+        <p>Not one thing per day. One thing per sitting. When you feel the tank emptying, stop. Check what mode your brain is actually in. The session is over when it's over, not when the clock says.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Stop Before Empty</h4>
+        <p>Stop while you still know what comes next. Write it as a single line at the bottom — just enough: "she asks him about the flight" or "this is where he lies." That line is the door you leave open. Next session starts from that line.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Don't Read It Back</h4>
+        <p>Not today. Not tomorrow. You can read it when you have three scenes, minimum. One scene is too easy for the auditor to dismiss. Three scenes is a thing. Three scenes has weight she has to reckon with.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Close the Loop Outside the Draft</h4>
+        <p>After the session ends, before anything else: send one voice note. To Sameliah, to a trusted reader, to yourself. Something specific about the aliveness of having done it. The voice note closes the validation loop the auditor was providing. The draft stays closed.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <h4>No Breaks That Cost the Night</h4>
+        <p>ADHD means a break isn't a break — it's a portal to oiling teak furniture at 2 AM. If you need to step away, set a timer for the pause. Five minutes. Phone facedown. Then back. The night is not renewable.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ THE AUDITOR ═══════════════════ -->
+  <div class="prose" id="auditor">
+    <p class="prose-label">When She Shows Up</p>
+    <h2 class="prose-title">The Auditor</h2>
+
+    <p class="prose-intro">She will show up. She always does. She's not your enemy — she developed this strategy at a point when the cost of rejection was higher than the cost of not trying. That calculus has changed. Your job isn't to fire her. It's to update her.</p>
+
+    <div class="accordion">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        <span>Before You Open the Document</span>
+        <svg class="accordion-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#006D77" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="accordion-body">
+        <p>The block hits before you even open it. The voice says "not ready yet." This is the protector in her purest form — she'd rather you never begin than begin and discover something you can't take back.</p>
+        <p><strong>Try this:</strong> Don't fight it. Pause. Find where the resistance lives in your body — chest, throat, hands. Breathe into that spot. Exhale slowly. Then say out loud: "I hear you. I'm writing today, and the draft doesn't define me." Open the document. Bridge sentence. That's all she needs to see — that you survived the opening.</p>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        <span>The Sneak Attack — 20 Minutes In</span>
+        <svg class="accordion-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#006D77" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="accordion-body">
+        <p>You're writing. It's going. Then quietly: "Is that cheesy?" "Is that part good enough?" You engage with the question. Twenty minutes pass before you realize you stopped writing and started arguing with a critic who isn't there.</p>
+        <p><strong>Try this:</strong> The moment you catch yourself evaluating instead of generating — journal the voice. Open a separate note. Write exactly what she said. Word for word. Then close it and go back to the draft. Don't answer her. Just transcribe her. She loses power when she's quoted accurately.</p>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        <span>The Pull Toward an Adjacent Task</span>
+        <svg class="accordion-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#006D77" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="accordion-body">
+        <p>"I should review my notes first." "Let me reorganize the outline." "The tool needs one more feature." That's her — routing the energy she can't stop into a channel she can control. The writing energy is real. The direction is a decoy.</p>
+        <p><strong>Try this:</strong> Name it out loud. "This is the adjacent task." That's all. The naming breaks the spell. Then open the new document. Bridge sentence. The adjacent task can wait. The writing cannot, because the writing is the only thing the adjacent tasks are protecting you from.</p>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        <span>You Wrote Something Good and Now You Can't Continue</span>
+        <svg class="accordion-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#006D77" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="accordion-body">
+        <p>You looked at it. Instead of using it as a runway, you evaluated it. The conditions that produced the scene — the unguarded ones — collapsed. The brief high, then the audit.</p>
+        <p><strong>Try this:</strong> Close the document. Open a new one. Write the next scene from the door line. Flow state builds on unreviewed work. The auditor gets the whole thing when there are 117 pages. Not before.</p>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        <span>The Audience Is Already in the Room</span>
+        <svg class="accordion-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#006D77" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="accordion-body">
+        <p>Immediately. Every time you open a document, it's being read by Lilly, by a festival programmer, by the version of yourself that has to defend it. The work is on submission before you've written a word.</p>
+        <p><strong>Try this:</strong> Tween April takes the audience out. She replaces every reader in the room with a single person you already love. You can't disappoint her by being imperfect — you can only disappoint her by not showing up. The stakes invert in exactly the way you need them to.</p>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        <span>The Gap Feels Permanent</span>
+        <svg class="accordion-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#006D77" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="accordion-body">
+        <p>The core fear — that the distance between imagination and execution will be visible and forever. Typing feels like a demotion from the version in your head.</p>
+        <p><strong>Try this:</strong> Read the Evidence section below. Then remember: the prayer warrior scene. Autumn's invisibility monologue. "Well, I see you." The bookstore meet-cute. You already closed the gap. You've done it repeatedly. The voice insists the gap is permanent because she hasn't read your own work. You have. And it holds up.</p>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)">
+        <span>Writing Feels Uniquely Hard Compared to Directing</span>
+        <svg class="accordion-arrow" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#006D77" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="accordion-body">
+        <p>Because writing is just you. No crew, no call sheet, nothing pulling you forward. With directing, constraints and other people create the structure. Writing means you have to be both the writer and the structure.</p>
+        <p><strong>Try this:</strong> Manufacture the external accountability. One bounded session. One hour. Nobody reads it. It doesn't go anywhere. Protector parts respond much better to bounded asks than to open-ended surrenders. "I'm going to write for an hour" is a much smaller threat than "I'm going to write the script."</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ripple zone — transitional pause before evidence -->
+<div class="ripple-zone" id="rippleZone" onclick="createRipple(event)">
+  <p class="ripple-prompt" id="ripplePrompt">Tap anywhere</p>
+</div>
+
+<div style="padding:48px 0;text-align:center;">
+<svg width="220" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
+  <path d="M15 65 Q28 62 40 52 Q55 38 65 28 Q75 18 82 15 Q90 12 96 18 Q102 26 97 36 Q90 46 78 48 Q68 50 60 44 Q56 40 58 35" stroke="#006D77" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M60 44 Q78 52 98 44 Q118 36 140 46 Q158 54 180 46 Q192 42 200 38" stroke="#006D77" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M97 36 Q108 28 120 34 Q128 40 124 48" stroke="#83c5be" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <path d="M12 72 Q35 68 58 62 Q80 56 100 54 Q130 50 158 54 Q178 56 198 48" stroke="#a8dadc" stroke-width="1" fill="none" stroke-linecap="round"/>
+</svg>
+</div>
+
+<!-- ═══════════════════ THE EVIDENCE — poster per quote ═══════════════════ -->
+<div id="evidence">
+
+  <!-- TITLE -->
+  <div class="poster poster-dark" style="min-height: 40vh;">
+    <p class="prose-label" style="color: var(--muted); margin-bottom: 8px;">The Voice Is a Liar</p>
+    <p class="poster-text poster-text-xl">The Evidence</p>
+  </div>
+
+  <!-- ——— OPENING: YOUR OWN WORDS ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 680px; position: relative; z-index: 1;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(38px, 8vw, 72px);">"A lot of the time I honestly feel like I'm completely invisible."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Autumn's monologue — Pick Me</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white">
+    <div style="max-width: 580px; position: relative; z-index: 1;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(28px, 5vw, 44px); line-height: 1.25;">The prayer warrior scene. The &#8220;suck it in&#8221; dynamics. The bookstore meet-cute. The fantasy Bachelorette sequence.</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">All in one 15-page short. Every tonal shift works.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(26px, 5vw, 42px);">"As a fat, Black woman, I was not sure if there was space for someone like me... But I am now."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Your director's note</p>
+    </div>
+  </div>
+
+  <div class="poster poster-dark" style="min-height: 65vh;">
+    <div style="max-width: 680px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(40px, 9vw, 80px);">"We are not waiting for permission."</p>
+      <p class="poster-source-whisper">Your Kickstarter</p>
+    </div>
+  </div>
+
+  <!-- ——— THE VINE ESSAY ——— -->
+
+  <div class="poster poster-glass">
+    <div style="max-width: 560px; position: relative;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 38px);">The vine essay. Two weeks after the worst thing. One sitting. The best thing you've ever written.</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">The evidence that unguarded writing is the good writing</p>
+    </div>
+  </div>
+
+  <!-- ——— WHAT PEOPLE SAID ABOUT THE VINE ESSAY ——— -->
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(28px, 5.5vw, 48px); font-style: italic; line-height: 1.2;">"As far as writing goes, this is about as good as it gets."</p>
+      <p class="poster-source-whisper">Jonathan Zelinger</p>
+    </div>
+  </div>
+
+  <div class="poster poster-ice">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"The world will be a little less lonely for the next girl because of you having shared this feeling, so perfectly."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Mary Kathryn</p>
+    </div>
+  </div>
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 680px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(36px, 8vw, 72px); font-style: italic;">"It's so fucking beautiful and raw and real."</p>
+      <p class="poster-source-whisper">Nick Lehmann</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white">
+    <div style="max-width: 580px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"Thank you for so succinctly defining what I've never been able to put to words."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Erin Roberson</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white">
+    <div style="max-width: 600px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"Here for you, and this, and all the beautiful and brilliant words you'll continue to write."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Olivia Myszkowski</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 38px);">"Thank you for sharing your grief in such a beautifully, perfectly You way."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Kate Milano</p>
+    </div>
+  </div>
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(26px, 5vw, 44px); font-style: italic; line-height: 1.2;">"This was so, so beautifully written."</p>
+      <p class="poster-source-whisper">Johnny LaZebnik</p>
+    </div>
+  </div>
+
+  <!-- ——— THE ROOMS THAT CHOSE YOU ——— -->
+
+  <div class="poster poster-ice" style="min-height: 40vh;">
+    <p class="evidence-category" style="color: var(--muted);">The Rooms That Chose You</p>
+    <p class="poster-text poster-text-lg" style="font-size: clamp(30px, 6vw, 52px);">They read your work first.</p>
+  </div>
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 580px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(22px, 4vw, 34px); font-style: normal; font-weight: 700; line-height: 1.4;">Brooklyn Nine-Nine. The Other Black Girl. Survival of the Thickest. Loot.</p>
+      <p class="poster-source-whisper">Rooms that chose you.</p>
+    </div>
+  </div>
+
+  <!-- ——— MATT HUBBARD (SHOWRUNNER, LOOT) ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 38px);">"I could not have done this without you. I think I listen to you more than anyone else in the room!"</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Matt Hubbard, showrunner, Loot</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white">
+    <div style="max-width: 620px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"I will always try to hire you even when you are doing something else and have to tell me no."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Matt Hubbard</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"I would never in a million years have been able to pitch something that specific and funny. I needed her perspective."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Matt Hubbard, quoted in Vulture</p>
+    </div>
+  </div>
+
+  <!-- ——— VULTURE LOOT RECAP — 5 STARS ——— -->
+
+  <div class="poster poster-glass poster-full">
+    <div style="max-width: 600px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"Season two of Loot has really been all hits, no misses, and this latest episode continues in that tradition."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Vulture recap, 5 stars</p>
+    </div>
+  </div>
+
+  <!-- ——— DECIDER / TAYLOR SWIFT ——— -->
+
+  <div class="poster poster-ice">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"So who do we have to thank for this iconic Loot era? Writer and proud Swiftie April Korto Quioh, who pitched the idea."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Decider</p>
+    </div>
+  </div>
+
+  <!-- ——— VULTURE: THE BREAD ——— -->
+
+  <div class="poster poster-ice">
+    <div style="max-width: 600px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"He also gave me tons of time off, no questions asked, when my dad was sick, but the bread is my favorite."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">You, quoted in Vulture</p>
+    </div>
+  </div>
+
+  <!-- ——— FAN MESSAGES ABOUT LOOT ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(32px, 7vw, 60px);">"Your episode had me screaming!!"</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Hillary Simone</p>
+    </div>
+  </div>
+
+  <div class="poster poster-dark">
+    <div style="max-width: 520px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(28px, 5.5vw, 46px); font-style: italic;">"I am so enjoying Loot!!"</p>
+      <p class="poster-source-whisper">Caroline Durham</p>
+    </div>
+  </div>
+
+  <!-- ——— JEN STATSKY ——— -->
+
+  <div class="poster poster-ice" style="min-height: 40vh;">
+    <p class="evidence-category" style="color: var(--muted);">People Who Know Good Writing</p>
+    <p class="poster-text poster-text-lg" style="font-size: clamp(26px, 5vw, 44px);">Told you so.</p>
+  </div>
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 640px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"The first writer I want to recommend as part of the #WGASolidarityChallenge is APRIL KORTO QUIOH. Her script 'Gramcracker' was really funny, dark, and made me want to keep reading things by her."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Jen Statsky, 187 likes</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 38px);">"It means so much that you liked it because I respect your brain and talent very much."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Jen Statsky</p>
+    </div>
+  </div>
+
+  <div class="poster poster-ice">
+    <div style="max-width: 560px; position: relative; z-index: 1;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(28px, 5.5vw, 48px);">"You're always on the top of my list."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Jen Statsky, on staffing recommendations</p>
+    </div>
+  </div>
+
+  <!-- ——— MEGAN AMRAM ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"We are both super impressed with your writing and love that you got in touch and want to help!!!"</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Megan Amram</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 620px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 38px);">"Any success you have, or will have, is because of your immense talent and kindness."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Megan Amram, on Gramcracker</p>
+    </div>
+  </div>
+
+  <!-- ——— EVA DICKERMAN (MANAGER) ——— -->
+
+  <div class="poster poster-ice">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"We so enjoyed your writing. You're a great joke writer, it's an engaging premise and it's dark and sly in a way that surprised us."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Eva Dickerman</p>
+    </div>
+  </div>
+
+  <!-- ——— MARC PROVISSIERO (MANAGER) ——— -->
+
+  <div class="poster poster-glass poster-full">
+    <div style="max-width: 620px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 40px);">"I immediately see the potential, and the reality that you are a star in the making. And that's exciting to us."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Marc Provissiero</p>
+    </div>
+  </div>
+
+  <!-- ——— AGENT PRI VIA SOPHIE ——— -->
+
+  <div class="poster poster-glass">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"She went on for like five minutes about how easy it is to help someone when they have a sample as good as yours."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Sophie, re: your friend Pri, who used to be an agent</p>
+    </div>
+  </div>
+
+  <!-- ——— MATT MURRAY (SUNNYSIDE) ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 640px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"You were always so funny and cool... You came highly recommended from so many people that I respect, and you exceeded all of their praise."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Matt Murray, Sunnyside showrunner</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 38px);">"I can't wait to see all the awesome things you do in your career."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Matt Murray</p>
+    </div>
+  </div>
+
+  <!-- ——— KRISTIN ELMQUIST (TEACHER) ——— -->
+
+  <div class="poster poster-ice">
+    <div style="max-width: 580px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 38px);">"Keep up the good work, keep in touch, and keep using your great voice. I have several favorite April stories."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Kristin Elmquist</p>
+    </div>
+  </div>
+
+  <!-- ——— JOSH GRANOVSKY ——— -->
+
+  <div class="poster poster-ice poster-full">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"I came across 'Gramcracker' while trolling the directory and whew... I loved it. I found all the characters super compelling."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Josh Granovsky</p>
+    </div>
+  </div>
+
+  <!-- ——— PICK ME REACTIONS ——— -->
+
+  <div class="poster poster-dark" style="min-height: 40vh;">
+    <p class="evidence-category" style="color: var(--muted);">Pick Me</p>
+    <p class="poster-text poster-text-xl" style="font-size: clamp(30px, 6vw, 52px);">You made the thing.</p>
+  </div>
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"I AM OBSESSED!!! You are such a great actress and this film is so fun and funny and well-done! I'm truly so impressed! I loved the cinematography."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Megan Amram, on Pick Me</p>
+    </div>
+  </div>
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(28px, 5.5vw, 48px); font-style: italic; line-height: 1.2;">"Holy shit! You had me cracking up! I love it!"</p>
+      <p class="poster-source-whisper">Lilly Wachowski</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass">
+    <div style="max-width: 520px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(28px, 5.5vw, 46px);">"Congratulations! Can't wait to hear more!"</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Lilly Wachowski</p>
+    </div>
+  </div>
+
+  <!-- ——— BLOOMBERG PROFILE ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 640px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"I've never seen anything like this before, and I feel confident about it, because it's genuine. There's no agenda other than making something real."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">You, profiled in Bloomberg</p>
+    </div>
+  </div>
+
+  <div class="poster poster-ice poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(32px, 7vw, 64px);">"We're going to do it free-market style."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">You, in Bloomberg</p>
+    </div>
+  </div>
+
+  <!-- ——— LENA DUNHAM (LIST APP) ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(32px, 7vw, 60px); font-style: italic;">"Any LOL from you is a joy for me."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Lena Dunham, commenting on your writing on BJ Novak's List App</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">Lena Dunham commented on your lists. Liked them. Kept coming back. On a platform full of writers, she found yours.</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">BJ Novak's List App</p>
+    </div>
+  </div>
+
+  <!-- ——— TANMAY CHOWDHARY ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 640px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"You are incredible. Your script is just insanely well written and there is so much personality in there. I love the world and everything about it."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Tanmay Chowdhary, Cinematographer of Pick Me (you found him because you were a fan of his work on Raveena's music videos)</p>
+    </div>
+  </div>
+
+  <!-- ——— AISHA MUHARRAR ——— -->
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(26px, 5vw, 42px); font-style: italic; line-height: 1.2;">"I am so excited to be a part of Pick Me. I truly love this story and I could not believe in April more."</p>
+      <p class="poster-source-whisper">Aisha Muharrar, Executive Producer of Pick Me (Writer/EP of Hacks, The Good Place, Parks and Recreation)</p>
+    </div>
+  </div>
+
+  <!-- ——— POPPY LIU ——— -->
+
+  <div class="poster poster-ice poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"I've read the script and can attest it is so funny and charming and is reminiscent of the best rom coms of the early 2000s that I am so nostalgic for!"</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Poppy Liu, Star of Hacks and Producer of Pick Me</p>
+    </div>
+  </div>
+
+  <!-- ——— MADELINE WALTER ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"I pledged to the Kickstarter because I know what a funny writer you are, and I am so excited to see you in front of the camera — and behind it as a director. This is a no-brainer!"</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Madeline Walter, Actress and Writer</p>
+    </div>
+  </div>
+
+  <!-- ——— CAROLINE WILLIAMS ——— -->
+
+  <div class="poster poster-glass">
+    <div style="max-width: 480px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(36px, 8vw, 64px); font-style: italic;">"I cannot wait to see this movie."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Caroline Williams, Writer</p>
+    </div>
+  </div>
+
+  <!-- ——— KICKSTARTER STATS ——— -->
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(40px, 9vw, 80px); line-height: 1.05;">$32,565</p>
+      <p class="poster-source-whisper" style="margin-top: 16px;">108% funded. 243 backers. Within 48 hours, strangers had pledged $27K.</p>
+    </div>
+  </div>
+
+  <!-- ——— FAN KICKSTARTER COMMENTS ——— -->
+
+  <div class="poster poster-ice poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"I feel seen." "You CAN do this! You've created something beautiful." "I really believe in you!" "I love your humor, wit &amp; voice." "I want to watch this and there's so many women who need to see this type of content."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Your Kickstarter backers and followers</p>
+    </div>
+  </div>
+
+  <!-- ——— NORTHWESTERN DIALOGUE ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">Northwestern's School of Communication featured you in their alumni magazine alongside Seth Meyers, Nicole Silverberg, and Ashley Nicole Black. The headline: "The Next Big Things."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Dialogue, Summer 2019</p>
+    </div>
+  </div>
+
+  <!-- ——— THE COLLEEN PIECE ——— -->
+
+  <div class="poster poster-dark" style="min-height: 40vh;">
+    <p class="evidence-category" style="color: var(--muted);">Your Integrity</p>
+    <p class="poster-text poster-text-xl" style="font-size: clamp(28px, 6vw, 50px);">The Colleen Piece</p>
+  </div>
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">You were the only Black person in that writers' room. It was your first real job in Hollywood. You documented everything — the incestual innuendo pitched for a kids' show, the insistence on removing POC background actors, the comments about your hair, your clothes, your body. And when the allegations came out years later, you wrote the truth.</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Your Substack, June 2023</p>
+    </div>
+  </div>
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(24px, 5vw, 42px); line-height: 1.2;">"I stand with every single one of the children and young adults who have bravely shared their experiences in the past few weeks."</p>
+      <p class="poster-source-whisper">You, in the Colleen piece</p>
+    </div>
+  </div>
+
+  <div class="poster poster-ice poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"This woman's story is impactful to read and she is so clearly not interested in focusing on anything except the facts of what she remembers experiencing. Huge respect to her for typing out her story and making it available to the public."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">A stranger on Reddit, about you</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass">
+    <div style="max-width: 580px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"Based on this article, she definitely appears to be a skilled writer. I hope Hollywood takes notice."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Same stranger. 190 upvotes.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(28px, 5.5vw, 46px); font-style: italic;">"April is WONDERFUL. She does terrific work and has such a funny, insightful perspective as a writer."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Another stranger on Reddit. 47 upvotes.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-dark" style="min-height: 65vh;">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(30px, 6vw, 52px);">You wrote the hard thing. Strangers recognized the writer and the person.</p>
+    </div>
+  </div>
+
+  <!-- ——— CLOSING: THE RECORD ——— -->
+
+  <div class="poster poster-dark" style="min-height: 40vh;">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(26px, 5vw, 44px); line-height: 1.15;">None of these people were being polite. They were responding to the work.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════ THE RECORD — your own words ═══════════════════ -->
+<div id="therecord">
+
+  <div class="poster poster-dark" style="min-height: 40vh;">
+    <p class="prose-label" style="color: var(--muted); margin-bottom: 8px;">Part Seven-B</p>
+    <p class="poster-text poster-text-xl">The Record</p>
+  </div>
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(28px, 5.5vw, 48px); line-height: 1.15;">They were responding to the work.<br><br>Here is the work.</p>
+    </div>
+  </div>
+
+  <!-- ——— EXHIBIT 1: FANFICTION — "EVERYTHING AND NOTHING" ——— -->
+
+  <div class="poster poster-ice" style="min-height: 30vh;">
+    <div style="max-width: 560px;">
+      <p class="prose-label" style="color: var(--deep); margin-bottom: 4px;">Exhibit 1</p>
+      <p class="poster-text poster-text-teal" style="font-size: clamp(22px, 4.5vw, 36px);">Everything and Nothing</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Challengers fanfiction. Prose fiction, third-person limited interior. Written for love, with no professional stakes. The unguarded room.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"He would say that helping out with his surgery is the least he can do, when Art has given him so much. Showed him what a true friend looks like &mdash; someone who will shit talk your rivals with you for hours on end and refresh their computer all night for tickets to see a band they don't even like for you, and bring you green grapes from the dining hall because they know they're your favorite."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4.5vw, 34px);">"That each letter feels safe tumbling out of it, cared for, warm and soft with the edges rounded off, right."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"Now, at least in the privacy of his own mind, he can call it what it is: love. He's sick in love with his best friend, plain and simple, and honestly, he can't even think of a time when he wasn't."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"He doesn't know how people just go about their lives &mdash; go to school, go to work, take their kids to karate class &mdash; when they're in love. When you're in love, it feels like the whole world should stop until you figure out what you're going to do about it."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4.5vw, 34px);">"He wonders when he'll ever get tired of looking at him. He fills to the brink with dread when he realizes that the answer is probably never. He sighs, miserable, and tries to get some sleep."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">Art retrieves a chunk of bloody gauze from his pocket and hands it to Patrick. "Oops, forgot one." He grabs it and disposes it without another word.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate" style="font-size: clamp(20px, 3.8vw, 30px); color: var(--deep);">"How is he supposed to carry on like everything's normal when one day some dorky blond kid tells you their name and the next, you realize that all of a sudden, the way they drink a glass of water makes you so damn happy you want to kill yourself?"</p>
+    </div>
+  </div>
+
+  <!-- ——— EXHIBIT 2: SHORT STORY — "FIRST SHORT STORY" ——— -->
+
+  <div class="poster poster-ice" style="min-height: 30vh;">
+    <div style="max-width: 560px;">
+      <p class="prose-label" style="color: var(--deep); margin-bottom: 4px;">Exhibit 2</p>
+      <p class="poster-text poster-text-teal" style="font-size: clamp(22px, 4.5vw, 36px);">First Short Story</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">All-lowercase literary prose, framed interiority. A structurally sophisticated short story. Different gear entirely &mdash; quieter, more economical, formally deliberate.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"her presence, in a word, was excruciating. she was brilliant, both in intellect and color; more vivid, even in memory, than most hues he had ever seen up close."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"she was self-assured, which made no sense given the fact that they were teenagers. and she hid it because to her, it was a liability &mdash; but she was unbearably kind. the type of girl to sit next to the shyest person at a party, the type whose soft voice had been spoken over all night long and give them her full attention. she saw people who until they met her, had sworn they were invisible."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"she could will an entire existence into being with her words alone. in passing, like it was nothing, tossed over her shoulder one day in his direction, she called him a writer. it had never occurred to him, laid out so plain like that, but she said it like it was so obvious she felt superfluous even mentioning it... he has written every single day since."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4.5vw, 34px);">"before her, he had no way of knowing that heartbreak could leave you gutted like a fish, gasping for air with no way back to the water."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"he wanted a love that wrapped itself around your waist, that never let you get cold, never let you go it alone. a love that would cut a hole through a roof and lower you down itself if it meant getting you where you needed to go."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate" style="font-size: clamp(20px, 3.8vw, 30px); color: var(--deep);">"he rounds the corner to find his wife lying on the couch, flossing while watching the local news, and he still can't get over the way her face lights up just because he walked into the room."</p>
+    </div>
+  </div>
+
+  <!-- ——— EXHIBIT 3: PICK ME THE SHORT ——— -->
+
+  <div class="poster poster-ice" style="min-height: 30vh;">
+    <div style="max-width: 560px;">
+      <p class="prose-label" style="color: var(--deep); margin-bottom: 4px;">Exhibit 3</p>
+      <p class="poster-text poster-text-teal" style="font-size: clamp(22px, 4.5vw, 36px);">Pick Me The Short</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Produced short film screenplay. The film that got Lilly Wachowski attached. The film that strangers watched and donated $32,565 to make into a feature.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4.5vw, 34px);">AUTUMN (31, Black, chubby, confident on the outside, asthmatic worrywart on the inside)</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">MUSU: She says that Autumn seems to think because she knows book and has a job, she has everything. Father, show her the error of her ways.<br><br>AUTUMN: (sotto) She said all that?<br><br>OLD MA PRAYER WARRIORS: Shhh!</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">AUTUMN: Jesus Christ, this family needs some serious boundaries.<br><br>MUSU: Boundaries? That is the most disrespectful thing I have ever heard. You know we're not white, right?</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4.5vw, 34px);">CHYRON: MUSU, AGE OFF LIMITS. MOM. ABUSES KOHL'S CASH.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">AUTUMN (V.O.): Growing up, I always just assumed that because I wasn't thin or light skinned, I would never get my fairytale ending. I watched my friends being pursued by men while I wasn't, and it made me feel like maybe I didn't deserve it.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">AUTUMN: I know it sounds... actually, I have no idea how it sounds. But honestly? I think I just want to be loved.<br><br>A long beat as she looks off into the distance, pensive.<br><br>PRODUCER: Wow, that is so touching.<br>(beat, then)<br>...Autumn?<br><br>Autumn ignores them, still lost in thought.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass" style="min-height: 65vh; border-left: 4px solid var(--muted);">
+    <div style="max-width: 360px;">
+      <p class="poster-text-articulate" style="font-size: clamp(20px, 3.8vw, 30px); color: var(--deep);">AUTUMN: I don't know, I guess everything about my race, class, gender, body, and the way I've been treated every day of my life?<br>(beat, then)<br>I hate the way this sounds, but... a lot of the time I honestly feel like I'm completely invisible.<br><br>ETHAN: Well, I see you.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">GUY #3: Mi deh yah fi show Autumn how a real man treat a woman. Mi waan Autumn fi cook beef patties fi mi while she siddung pon mi face &mdash;<br><br>CUT TO BLACK</p>
+    </div>
+  </div>
+
+  <!-- ——— EXHIBIT 4: GRAMCRACKER (ORIGINAL PILOT) ——— -->
+
+  <div class="poster poster-ice" style="min-height: 30vh;">
+    <div style="max-width: 560px;">
+      <p class="prose-label" style="color: var(--deep); margin-bottom: 4px;">Exhibit 4</p>
+      <p class="poster-text poster-text-teal" style="font-size: clamp(22px, 4.5vw, 36px);">Gramcracker</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Original television pilot. The script Jen Statsky called "really funny, dark" and that "made me want to keep reading things by her." The writing that got you hired.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">MARTY MCDONALD: Witnesses describe the primary suspect as a black woman who is 'a little on the chunkier side' and around the age of thirty but quote 'She could also be seventeen. She's black, so it's nearly impossible to tell.'</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">As soon as he returns to his cruiser, Rain wipes her tears one eye at a time and turns up the speakers, blasting "Norf Norf" by Vince Staples. She speeds off.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">GRAMCRACKER: I admire your generation's hands-off approach to your figures. Personally, there's nothing I enjoy more than the adoring gaze of a man.<br><br>RAIN: Anyone want to respond to that? Because that is the saddest shit I have ever heard in my life.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">RAIN: I don't get why you're defending her. Isn't this the same woman who accused Mom of only marrying you for the tax benefits? And was too willfully ignorant to notice that her own husband was black?<br><br>GERALD: Hey! Pop looked pretty fair in certain light and he had a relaxer at the time.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate" style="font-size: clamp(20px, 3.8vw, 30px); color: var(--deep);">GERALD: You know, sometimes you really remind me of her.<br><br>RAIN: Take it back.<br><br>GERALD: I mean it. She's smart as hell, confident, speaks her mind &mdash;<br><br>RAIN: She's also a nasty racist with out of control rosacea.<br><br>GERALD: Look. Her life didn't turn out the way she wanted and she takes it out on everyone around her. And sometimes when I see you, and how angry you've been ever since that fucking cop put his hands on you, I worry.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">Instead of getting the water, she pulls out her phone and leisurely scrolls through Instagram while Gramcracker CHOKES AUDIBLY in the background. She likes a photo of Kevin Hart's blasian baby.<br><br>RAIN: (whispering) So cute.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">GRAMCRACKER: Silly me, I had forgotten that you aren't the brightest bulb in the shed. I'll spell it out for you: (slowly) I'm haunting you. Get it now?</p>
+    </div>
+  </div>
+
+  <!-- ——— EXHIBIT 5: THE SUBSTACK ——— -->
+
+  <div class="poster poster-ice" style="min-height: 30vh;">
+    <div style="max-width: 560px;">
+      <p class="prose-label" style="color: var(--deep); margin-bottom: 4px;">Exhibit 5</p>
+      <p class="poster-text poster-text-teal" style="font-size: clamp(22px, 4.5vw, 36px);">The Substack</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">"You Owe Me an Apology." Personal essay, cultural criticism. The writing that built an audience before Pick Me. The newsletter that raised your profile enough to fund the short.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 5vw, 38px);">"The truth is, reader, that I feel like I deserve to be apologized to."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"What if your dad is more of a Kendall Roy type; a political science nerd who is more interested in high-end cologne than any type of outdoor activity, and who has taken a late in life interest in journaling like mine has?"</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"Think about your most impressive friend. I can see her now. A doctor, a lawyer, a brilliant filmmaker. An urban planner dedicated to making Midwestern cities more walkable. A sustainable fashion designer. She's the first to call you on every birthday, your loudest cheerleader, a heart of pure gold. She's confident, thoughtful, well-read: if this country were even a tenth less sexist, she would probably be president. Now imagine her boyfriend. Exactly."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"I resent that when I am smaller, I am treated better, and that there is no way to access that treatment other than to figure out a way to become smaller again. I resent the knowledge that it feels like for every step we make towards real progress, the Ozempic craze, or buccal fat removal, or Michelle Obama's fat kid crusade, or the movie The Whale undoes it instantly."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate" style="font-size: clamp(24px, 5vw, 38px); color: var(--deep);">"Walking around with the belief that I am less than just because I have a gut and an ass will NEVER be. Know that."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"Cancel culture is not real. The majority of the people I know who work in this industry have spent years of their lives waiting, hoping, that an article will finally drop, naming the sins of the abuser they endured and finishing them for good. And each one has had to stand by and watch as that person is dragged on Twitter for a few days, removed from a project or two, and is back on their feet in time for the next year's Emmys."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"No longer will powerful higher-ups feel comfortable subjecting me to abusive workplace environments without fear of retribution or saying slurs in front of me and betting I will remain tight-lipped. I may never be taken advantage of in this town again! Wait. Hold on a second. Isn't that, actually... a good thing?"</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"I quit a job for the first time, exited friendships that did not serve me, bought and promptly returned a white sectional couch. I spatchcocked a chicken. I wrote a movie."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 5vw, 38px);">"I am a successful screenwriter with a fat ass and no one can take that away from me."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"Before she even opened her mouth in episode 1, I could see her. I could see how hard she had fought to appear strong, how unwilling she was to endure one more heartbreak after a lifetime of them, her stunning fragility."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate" style="font-size: clamp(20px, 3.8vw, 30px); color: var(--deep);">"I want her, and every other brokenhearted Black girl watching at home, to know how supernaturally loved we are, simply for existing. May we all drop the strong girl shit and cry hard, laugh loud, and let the fucking love in."</p>
+    </div>
+  </div>
+
+  <!-- ——— EXHIBIT 6: THE VINE ESSAY ——— -->
+
+  <div class="poster poster-ice" style="min-height: 30vh;">
+    <div style="max-width: 560px;">
+      <p class="prose-label" style="color: var(--deep); margin-bottom: 4px;">Exhibit 5</p>
+      <p class="poster-text poster-text-teal" style="font-size: clamp(20px, 4vw, 32px);">On Vines, Branches, and Life as the Girl Whose Dad Just Died</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">Personal essay, Substack. March 2, 2026 &mdash; two weeks after Tweh Quioh died. Written in one sitting, in the aftermath of the worst thing. The flagship piece of evidence. The one that proves the unguarded room is real.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(20px, 3.8vw, 30px);">"The most affronting part of finding out your father has just passed away (in my opinion) is, hands down, the sudden rearing of your perfectionism's ugly head. Not while you're presenting a Powerpoint in class or even shopping for the best possible throw blanket to add the perfect pop of color to the living room. No. Now. In this moment."</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass poster-full" style="border-left: 4px solid var(--muted);">
+    <div style="max-width: 620px;">
+      <p class="poster-text-articulate" style="font-size: clamp(20px, 3.8vw, 30px); color: var(--deep);">"I begged him to take one of mine and he refused. I don't share that because I want cool points for my pure act of benevolence... because it wasn't. It was a basic act of self preservation and I share it only to demonstrate just how desperate I was to keep him here. To give me more advice and tell me more confusing African parables and to hurt my feelings and piss me off and to love me like no one ever has, like no one will again."</p>
+    </div>
+  </div>
+
+  <!-- ——— THE RECORD CLOSING ——— -->
+
+  <div class="poster poster-dark" style="min-height: 50vh;">
+    <div style="max-width: 600px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(28px, 5.5vw, 48px); line-height: 1.15;">Six sources. Thirty-nine exhibits. Fanfiction and pilots and essays and produced television and a short film that raised $32,565 and one grief essay written in one sitting two weeks after the worst day.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full" style="min-height: 50vh;">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(30px, 6vw, 56px); line-height: 1.1;">The voice needs a story: <em>I have never written anything good.</em></p>
+    </div>
+  </div>
+
+  <div class="poster poster-dark poster-full" style="min-height: 50vh;">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(30px, 6vw, 56px); line-height: 1.1;">The record says otherwise.</p>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div style="padding:48px 0;text-align:center;">
+<svg width="280" height="80" viewBox="0 0 280 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
+  <path d="M10 50 Q30 20 50 40 Q65 55 80 35 Q95 15 115 40 Q130 58 150 30 Q165 10 185 38 Q200 55 215 35 Q230 18 250 42 Q265 55 270 45" stroke="#83c5be" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M25 58 Q45 35 65 50 Q80 60 95 42 Q110 25 130 48 Q145 62 165 38 Q180 20 200 45 Q215 58 235 40 Q250 28 260 50" stroke="#a8dadc" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <path d="M5 65 Q25 48 45 58 Q60 65 75 52 Q90 40 110 55 Q125 65 145 48 Q160 35 180 52 Q195 62 215 48 Q235 38 255 55 Q270 62 275 55" stroke="#ceeaf0" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+</svg>
+</div>
+
+<!-- ═══════════════════ THE TRUTHS — poster per truth ═══════════════════ -->
+<div id="truths">
+
+  <div class="poster poster-dark" style="min-height: 40vh;">
+    <p class="prose-label" style="color: var(--muted); margin-bottom: 8px;">Things That Are True</p>
+    <p class="poster-text poster-text-xl">Forensic, Not Aspirational</p>
+  </div>
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(26px, 5vw, 44px);">The only condition under which you write freely is when you aren't trying — when the auditor doesn't have time to arrive.</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">That's the proof of concept.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(30px, 6vw, 56px);">You are not trying to become a writer. You already are one.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-ice poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(26px, 5vw, 44px);">The part of you calling one scene insufficient is the same part that will call ten scenes insufficient.</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">There is no amount that satisfies her. So the scene you wrote counts.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass">
+    <div style="max-width: 560px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 40px);">Your protector part will build entire software products to stay adjacent to the writing.</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">That is not failure. That is evidence of how badly you want this.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-ice poster-full">
+    <div style="max-width: 580px; position: relative; z-index: 1;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(24px, 4.5vw, 40px); line-height: 1.25;">The understanding has become its own adjacent task.</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">The gap isn't insight. It's the ten seconds between knowing and starting.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(26px, 5vw, 44px);">When the voice is written down — journaled, word for word — it doesn't hold up.</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">The voice is confident in the dark. It falls apart on paper.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-glass">
+    <div style="max-width: 580px; position: relative; z-index: 1;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 40px);">The short story that became Pick Me came from the room where no one was watching.</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">That room still exists. You just have to enter it without the audience already seated.</p>
+    </div>
+  </div>
+
+  <div class="poster poster-ice poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(26px, 5.5vw, 48px);">Permission to produce imperfect work and call it real — that's what you said you need.</p>
+    </div>
+  </div>
+
+</div>
+
+<div style="padding:48px 0;text-align:center;">
+<svg width="280" height="80" viewBox="0 0 280 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
+  <path d="M10 50 Q30 20 50 40 Q65 55 80 35 Q95 15 115 40 Q130 58 150 30 Q165 10 185 38 Q200 55 215 35 Q230 18 250 42 Q265 55 270 45" stroke="#83c5be" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M25 58 Q45 35 65 50 Q80 60 95 42 Q110 25 130 48 Q145 62 165 38 Q180 20 200 45 Q215 58 235 40 Q250 28 260 50" stroke="#a8dadc" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <path d="M5 65 Q25 48 45 58 Q60 65 75 52 Q90 40 110 55 Q125 65 145 48 Q160 35 180 52 Q195 62 215 48 Q235 38 255 55 Q270 62 275 55" stroke="#ceeaf0" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+</svg>
+</div>
+
+<!-- ═══════════════════ YOU SAID IT YOURSELF ═══════════════════ -->
+<div id="yousaidit">
+
+  <div class="poster poster-dark" style="min-height: 40vh;">
+    <p class="prose-label" style="color: var(--muted); margin-bottom: 8px;">From Your Own Mouth</p>
+    <p class="poster-text poster-text-xl">You Said It Yourself</p>
+  </div>
+
+  <!-- ——— CREATIVE INDEPENDENT: the spreadsheet ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"I cannot create based on the spreadsheet. That is so crazy. That makes me feel insane. It completely contradicts the whole point of this. I actually did get into this to express myself, not express the interest of, you know, the Pepsi corporation."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">You, in The Creative Independent</p>
+    </div>
+  </div>
+
+  <!-- ——— CREATIVE INDEPENDENT: tell my story ——— -->
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(28px, 5.5vw, 48px); font-style: italic; line-height: 1.2;">"I think I have to tell my story. If you like it, you like it. If you don't, you don't. And we can leave it at that."</p>
+      <p class="poster-source-whisper">The Creative Independent</p>
+    </div>
+  </div>
+
+  <!-- ——— CREATIVE INDEPENDENT: bleeding heart ——— -->
+
+  <div class="poster poster-ice poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"People can tell when a story is written by a human being with a bleeding heart or when it's spat out by a bot. I think studios think that audiences are stupid and they're not."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">The Creative Independent</p>
+    </div>
+  </div>
+
+  <!-- ——— CREATIVE INDEPENDENT: fire ——— -->
+
+  <div class="poster poster-glass">
+    <div style="max-width: 520px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(28px, 5.5vw, 48px); font-style: italic;">"I am a firm believer that fire is destructive but is also an opportunity for rebirth."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">The Creative Independent</p>
+    </div>
+  </div>
+
+  <!-- ——— CREATIVE INDEPENDENT: love to laugh ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 600px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 38px);">"I can work on a show all day long and still at night go to a stand-up show and be like, 'I love this.' I love to laugh."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">The Creative Independent</p>
+    </div>
+  </div>
+
+  <!-- ——— SUBSTACK: greedy for apologies ——— -->
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(26px, 5.5vw, 46px); line-height: 1.15;">"I am absolutely, unwaveringly, shamelessly greedy for apologies."</p>
+      <p class="poster-source-whisper">You Owe Me An Apology (your Substack)</p>
+    </div>
+  </div>
+
+  <!-- ——— SUBSTACK: twenty year old April ——— -->
+
+  <!-- ——— SUBSTACK: spatchcocked a chicken ——— -->
+
+  <!-- ——— SUBSTACK: NEVER be ——— -->
+
+  <!-- ——— FOOD PSYCH: done with diets ——— -->
+
+  <div class="poster poster-glass">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(28px, 5.5vw, 46px); font-style: italic;">"I was like no. I'm done. I've been on a diet since I'm five years old. Like I'm done."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">You, on Food Psych podcast</p>
+    </div>
+  </div>
+
+  <!-- ——— PODCAST: spiteful West African woman ——— -->
+
+  <div class="poster poster-ice poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"I am a spiteful West African woman and I take pride in that and you will never ever get away with not apologizing to me if you owe me one."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">You Owe Me An Apology (your podcast)</p>
+    </div>
+  </div>
+
+  <!-- ——— PODCAST: can't be fake ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 580px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 38px);">"I literally don't have the ability to be fake. Like I've tried it. It just looks like I'm sick or something."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">You Owe Me An Apology</p>
+    </div>
+  </div>
+
+  <!-- ——— PODCAST: pop culture is political ——— -->
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(24px, 5vw, 40px); line-height: 1.2;">"I firmly believe that pop culture is political and we can look at what's happening in pop culture as an amazing analogy for what's happening in the world."</p>
+      <p class="poster-source-whisper">You Owe Me An Apology</p>
+    </div>
+  </div>
+
+  <!-- ——— EXPLORATION LIVE: alto ——— -->
+
+  <div class="poster poster-dark poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(24px, 5vw, 40px); line-height: 1.2;">"I was always told I was an alto growing up. I actually think that's just like anti-Black and I think I'm a soprano."</p>
+      <p class="poster-source-whisper">You, on Exploration Live</p>
+    </div>
+  </div>
+
+  <!-- ——— EXPLORATION LIVE: gentrifying own shit ——— -->
+
+  <div class="poster poster-ice poster-full">
+    <div style="max-width: 640px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(22px, 4vw, 34px);">"I was literally making my own culture's recipe bastardized by this white woman not even noticing because the way she made it look was so fun that I didn't even know I was gentrifying my own shit."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">You, on Alison Roman making your mom's African fish gravy</p>
+    </div>
+  </div>
+
+  <!-- ——— EXPLORATION LIVE: Lizzie McGuire ——— -->
+
+  <div class="poster poster-white poster-full">
+    <div style="max-width: 560px;">
+      <p class="poster-text-articulate poster-text-articulate-teal" style="font-size: clamp(24px, 4.5vw, 38px);">"That's art. That's the value of art. That's why we're doing this. Hilary Duff."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">You, defending Lizzie McGuire on Exploration Live</p>
+    </div>
+  </div>
+
+  <!-- ——— TWITTER via DIALOGUE ——— -->
+
+  <div class="poster poster-glass">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-teal" style="font-size: clamp(24px, 4.5vw, 38px); font-style: italic;">"Stop asking for my skin care routine. There is none. I'm just mean to men and it keeps me young and beautiful."</p>
+      <p class="poster-source-whisper" style="color: var(--muted);">You, on Twitter (quoted in Northwestern Dialogue)</p>
+    </div>
+  </div>
+
+  <!-- ——— CLOSING: you said it ——— -->
+
+  <div class="poster poster-dark" style="min-height: 40vh;">
+    <div style="max-width: 560px;">
+      <p class="poster-text poster-text-xl" style="font-size: clamp(26px, 5vw, 44px); line-height: 1.15;">That voice? Those instincts? That's not someone who needs permission. That's someone who already knows.</p>
+    </div>
+  </div>
+
+</div>
+
+<main class="page">
+
+  <!-- ═══════════════════ THRULINES ═══════════════════ -->
+  <div class="prose" id="thrulines">
+    <p class="prose-label">The Work That Matters</p>
+    <h2 class="prose-title">Your Thrulines</h2>
+
+    <p class="prose-intro">These are the five threads running through everything you've written and everything you want to write. When the voice asks "what do you even have to say," this is the answer.</p>
+
+    <div class="thruline">
+      <span class="thruline-num">01</span>
+      <span class="thruline-title">The Accountability Apparatus</span>
+    </div>
+    <div class="thruline">
+      <span class="thruline-num">02</span>
+      <span class="thruline-title">The Missing Man</span>
+    </div>
+    <div class="thruline">
+      <span class="thruline-num">03</span>
+      <span class="thruline-title">The Stage Is Everywhere</span>
+    </div>
+    <div class="thruline">
+      <span class="thruline-num">04</span>
+      <span class="thruline-title">Body as Evidence</span>
+    </div>
+    <div class="thruline">
+      <span class="thruline-num">05</span>
+      <span class="thruline-title">Black Women's Interior Lives as Genre</span>
+    </div>
+  </div>
+
+</main>
+
+<div style="padding:36px 0;text-align:center;">
+<svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
+  <path d="M18 3 Q18 3 7 21 Q2 30 7 38 Q12 46 18 46 Q24 46 29 38 Q34 30 29 21 Q18 3 18 3Z" stroke="#83c5be" stroke-width="1.5" fill="none"/>
+  <path d="M12 33 Q14 37 18 39" stroke="#a8dadc" stroke-width="1" fill="none" stroke-linecap="round"/>
+</svg>
+</div>
+
+<!-- ═══════════════════ EMERGENCY ═══════════════════ -->
+<div class="poster poster-dark poster-full" id="emergency">
+  <div style="max-width: 520px; position: relative;">
+    <p class="poster-source" style="margin-bottom: 32px; margin-top: 0; opacity: 0.6;">In case of emergency</p>
+    <p class="poster-text poster-text-xl" style="font-size: clamp(28px, 6vw, 52px); line-height: 1.15; font-style: italic;">This counts. Whatever comes out, it counts as the writing having happened.</p>
+  </div>
+</div>
+
+<main class="page">
+
+  <div class="prose">
+    <div class="block">
+      <p class="block-title">The Minimum Viable Session</p>
+      <p>You don't need an hour. You don't need a scene. You need one bridge sentence in a new document. If more comes, it comes. If it doesn't, the bridge sentence counts. Twenty minutes counts. One scene counts. The only rule is forward only, tween April in the room, auditor gets nothing until there are three.</p>
+    </div>
+
+    <div class="block-tinted">
+      <p class="block-title">The Free Water</p>
+      <p>Remember what your therapist helped you see: the image of water pouring, the feeling of freedom to write. That image is real. It's yours. It's why the glass of water is at the top of this page. The water is free. The writing is free. You don't have to earn the right to pour it out. You just pour.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- poster: permission -->
+<div class="poster poster-full">
+  <div style="max-width: 640px;">
+    <p class="poster-text poster-text-teal" style="font-size: clamp(28px, 5.5vw, 50px);">Granting permission is not lowering the bar. It's refusing to let the bar be the point.</p>
+  </div>
+</div>
+
+<main class="page">
+
+  <div class="prose">
+    <div class="block">
+      <p class="block-title">If You Need to Hear It Right Now</p>
+      <p>The scene you wrote is real. It's real. Write the next one with the same low stakes you somehow found for that one — and don't look back at it. Forward only. The auditor lives in the rearview.</p>
+      <p>You are a writer who writes. Not because the draft proves it. Because the knowing was always enough.</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ NOTE TO YOU ═══════════════════ -->
+  <div class="letter">
+    <p>You kept me safe. Every time I didn't write and someone couldn't read something unfinished and find it lacking, you did that. Every time the internal version stayed perfect and untouchable, you protected it. You have been doing your job.</p>
+    <p>The ask isn't "let me write without you." The ask is: can you protect me differently? Instead of protecting me from the attempt, can you protect me during it? Can you be the part that reminds me the draft doesn't define me — rather than the part that prevents the draft?</p>
+    <p>And when you show up mid-sentence with "is that cheesy?" — I'm going to try something new. I'm going to hear you out. I'm going to write down exactly what you say. And then I'm going to keep writing. Because I've literally never tried that before. And you deserve to be heard. You just don't get to be the editor. Not yet.</p>
+  </div>
+
+  <div class="poster poster-dark" style="min-height: 50vh;">
+    <div style="max-width: 560px;">
+      <p class="poster-text-articulate" style="font-size: clamp(22px, 4.5vw, 34px); color: var(--ice); line-height: 1.5;">"For we are God's handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."</p>
+      <p class="poster-source-whisper" style="color: var(--muted); margin-top: 24px;">Ephesians 2:10</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Built for April Korto Quioh</p>
+  </div>
+
+</main>
+
+<script>
+function toggleCheck(el) { el.classList.toggle('checked'); }
+
+function toggleAccordion(trigger) {
+  const body = trigger.nextElementSibling;
+  const wasOpen = trigger.classList.contains('open');
+  document.querySelectorAll('.accordion-trigger.open').forEach(t => {
+    t.classList.remove('open'); t.nextElementSibling.classList.remove('open');
+  });
+  if (!wasOpen) { trigger.classList.add('open'); body.classList.add('open'); }
+}
+
+function goTo(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 60, behavior: 'smooth' });
+}
+
+const navSections = ['mechanism','approach','ritual','modes','rules','auditor','evidence','therecord','truths','emergency'];
+window.addEventListener('scroll', () => {
+  let current = '';
+  for (const id of navSections) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) current = id;
+  }
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.toggle('active', (link.getAttribute('onclick') || '').includes("'" + current + "'"));
+  });
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  document.getElementById('progressBar').style.width = (h > 0 ? (window.pageYOffset / h) * 100 : 0) + '%';
+}, { passive: true });
+
+function selectMode(mode) {
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.mode-detail').forEach(d => d.classList.remove('visible'));
+  const card = event.currentTarget;
+  const detail = document.getElementById('mode-' + mode + '-detail');
+  if (card) card.classList.add('active');
+  if (detail) detail.classList.add('visible');
+}
+
+let timerInterval = null, timerSeconds = 0, timerRunning = false;
+const TIMER_GOAL = 3600;
+function toggleTimer() {
+  const btn = document.getElementById('timerBtn'), icon = document.getElementById('timerIcon');
+  if (timerRunning) {
+    clearInterval(timerInterval); timerRunning = false; btn.classList.remove('running');
+    icon.setAttribute('d', 'M6 4L14 9L6 14Z');
+  } else {
+    timerRunning = true; btn.classList.add('running');
+    icon.setAttribute('d', 'M5 4H8V14H5ZM10 4H13V14H10Z');
+    timerInterval = setInterval(() => { timerSeconds++; updateTimerDisplay(); updateWaterFill(); }, 1000);
+  }
+}
+function resetTimer() {
+  clearInterval(timerInterval); timerRunning = false; timerSeconds = 0; updateTimerDisplay(); updateWaterFill();
+  document.getElementById('timerBtn').classList.remove('running');
+  document.getElementById('timerIcon').setAttribute('d', 'M6 4L14 9L6 14Z');
+}
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60), s = timerSeconds % 60;
+  document.getElementById('timerDisplay').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+}
+function updateWaterFill() {
+  const fill = document.getElementById('timerWaterFill');
+  if (fill) fill.style.width = Math.min((timerSeconds / TIMER_GOAL) * 100, 100) + '%';
+}
+
+let breatheRunning = false, breatheTimeout = null, breathePhase = 0;
+function toggleBreathe() {
+  const arch = document.getElementById('breatheArch'), text = document.getElementById('breatheText'), label = document.getElementById('breatheLabel');
+  if (breatheRunning) {
+    breatheRunning = false; arch.classList.remove('breathing'); clearTimeout(breatheTimeout);
+    text.textContent = 'START'; label.textContent = 'Tap to begin a breathing cycle'; return;
+  }
+  breatheRunning = true; arch.classList.add('breathing'); breathePhase = 0;
+  const phases = [
+    { text: 'IN', label: 'Inhale slowly for 4 seconds', dur: 4000 },
+    { text: 'HOLD', label: 'Hold for 4 seconds', dur: 4000 },
+    { text: 'OUT', label: 'Exhale slowly for 4 seconds', dur: 4000 },
+    { text: 'REST', label: 'Rest for 2 seconds', dur: 2000 }
+  ];
+  function tick() {
+    if (!breatheRunning) return;
+    const p = phases[breathePhase % phases.length];
+    text.textContent = p.text; label.textContent = p.label; breathePhase++;
+    breatheTimeout = setTimeout(tick, p.dur);
+  }
+  tick();
+}
+
+function createRipple(e) {
+  const zone = document.getElementById('rippleZone');
+  const rect = zone.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const ripple = document.createElement('div');
+  ripple.className = 'ripple-circle';
+  ripple.style.left = (x - 200) + 'px';
+  ripple.style.top = (y - 200) + 'px';
+  zone.appendChild(ripple);
+  const prompt = document.getElementById('ripplePrompt');
+  if (prompt) prompt.style.opacity = '0';
+  setTimeout(() => ripple.remove(), 2500);
+}
+
+
+/* ═══════ AMBIENT AUDIO ═══════ */
+function toggleAmbient() {
+  const audio = document.getElementById('ambientAudio');
+  const btn = document.getElementById('audioToggle');
+  if (audio.paused) {
+    audio.play().then(() => btn.classList.add('playing')).catch(() => {});
+  } else {
+    audio.pause();
+    btn.classList.remove('playing');
+  }
+}
+</script>
+
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(reg => console.log('SW registered:', reg.scope))
+      .catch(err => console.log('SW registration failed:', err));
+  });
+}
+</script>
+
+</body>
+</html>
